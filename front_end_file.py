@@ -4,7 +4,7 @@ import folium
 from streamlit_folium import folium_static
 import altair as alt
 
-
+################################################ Page setup ########################################################
 st.set_page_config(
     page_title="SafeLive Los Angeles",
     layout="wide",
@@ -23,16 +23,14 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-
-#######################
-# Sidebar
+################################################ Sidebar ###########################################################
 with st.sidebar:
     st.title('Additional Feature Selection')
 
-
+################################################# Plots ############################################################
 
 def create_map(age, latitude, longitude, day_ocurred, month_ocurred, year_ocurred):
-    ''' Function to create basic map once date of visit has been input.''' # Currently the date has no bearing on the map...
+    ''' Function to create basic map once features have been input.'''
     map = folium.Map(location=[34.052235, -118.243683], zoom_start=10)
     folium.Marker(location=[latitude, longitude], popup='Your intended location').add_to(map)
     folium_static(map)
@@ -42,7 +40,7 @@ def main():
     st.title('SafeLive - A crime prediction app')
     st.write("Welcome to our Crime Prediction App for Los Angeles! With just a few inputs — your age, location, and date of visit — we'll provide you with insights into the most likely crime you might encounter during your time in LA. Our app utilizes advanced data analytics and machine learning algorithms to offer personalized crime predictions, helping you stay informed and make informed decisions while exploring the city.")
 
-    #################### Feature inputs ########################################
+    ######################################## Feature inputs #########################################################
     age = st.selectbox("Select your age:", range(18,100))
     latitude = st.slider('Select latitude', 33.699, 34.337, (33.699 + 34.337) / 2)
     longitude = st.slider('Select longitude:', -117.656, -118.669, (-117.656 + -118.669) / 2)
