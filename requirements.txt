@@ -16,3 +16,7 @@ streamlit
 folium
 streamlit-folium
 altair
+
+
+# Geo encoding
+geopandas
