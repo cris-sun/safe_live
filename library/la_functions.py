@@ -10,6 +10,7 @@ import pandas as pd
 #-------------------------------------------------------------------#
 # Functions
 
+# generating a gravity score
 def assign_gravity(crime_description):
     lower_case_description = crime_description.lower()
     if any(word in lower_case_description for word in ['petty theft', 'vandalism', 'minor fraud', 'trespass','stole']):
@@ -21,7 +22,7 @@ def assign_gravity(crime_description):
     else:
         return 1  # Default to Low Gravity if not clearly fitting other categories
 
-
+# adding the geoshape data
 def data_enriching(csv_file):
     current_dir = os.getcwd()
     current_dir
@@ -30,31 +31,31 @@ def data_enriching(csv_file):
     df = pd.read_csv(file_path)
 
     columns_keep = [
-#'division_number',
+'division_number',
 'date_reported',
 'date_occurred',
-#'area',
+'area',
 'area_name',
-#'reporting_district',
-#'part',
-#'crime_code',
+'reporting_district',
+'part',
+'crime_code',
 'crime_description',
-#'modus_operandi',
+'modus_operandi',
 'victim_age',
 'victim_sex',
 'victim_descent',
-#'premise_code',
+'premise_code',
 'premise_description',
-#'weapon_code',
+'weapon_code',
 'weapon_description',
-#'status',
+'status',
 'status_description',
-#'crime_code_1',
-#'crime_code_2',
-#'crime_code_3',
-#'crime_code_4',
+'crime_code_1',
+'crime_code_2',
+'crime_code_3',
+'crime_code_4',
 'location',
-#'cross_street',
+'cross_street',
 'latitude',
 'longitude',
 ]
@@ -72,7 +73,7 @@ def data_enriching(csv_file):
 
     #   fetch all the data from the raw_data folder
 
-    file_path = os.path.join(current_dir, '..', 'raw_data','geo_data','cfbcc20d-2c5d-4c30-9dfa-627d46ec1a742020328-1-9ulknm.pzqsm.shp')
+    file_path = os.path.join(current_dir, '..', 'data','geo_data','cfbcc20d-2c5d-4c30-9dfa-627d46ec1a742020328-1-9ulknm.pzqsm.shp')
 
     neighborhoods = gpd.read_file(file_path)
 
