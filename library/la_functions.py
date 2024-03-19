@@ -20,7 +20,7 @@ def assign_gravity(crime_description):
     elif any(word in lower_case_description for word in ['homicide', 'rape', 'kidnapping', 'arson','dead','penetration','penis','child pornography']):
         return 3  # High Gravity
     else:
-        return 1  # Default to Low Gravity if not clearly fitting other categories
+        return 1 # Default to Low Gravity if not clearly fitting other categories
 
 # adding the geoshape data
 def data_enriching(csv_file):
