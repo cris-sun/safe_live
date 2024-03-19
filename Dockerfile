@@ -2,8 +2,8 @@ FROM python:3.8.12-slim
 
 COPY package_folder package_folder
 COPY requirements.txt requirements.txt
-COPY notebooks notebooks
-# COPY models models
+#COPY notebooks notebooks
+COPY models models
 # COPY setup.py setup.py
 
 RUN pip install -r requirements.txt

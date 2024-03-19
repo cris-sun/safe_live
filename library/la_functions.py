@@ -67,6 +67,7 @@ def data_enriching(csv_file):
     df['date_occurred'] = pd.to_datetime(df['date_occurred'], errors='coerce')
     df['year_occurred'] = df['date_occurred'].dt.year
     df['month_occurred'] = df['date_occurred'].dt.month
+    df['day_occurred'] = df['date_occurred'].dt.day
     df['hour_occurred'] = df['date_occurred'].dt.hour
 
     # Load the shapefile
