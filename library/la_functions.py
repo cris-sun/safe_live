@@ -7,6 +7,11 @@ import os
 import geopandas as gpd
 import pandas as pd
 
+# Data viz
+import plotly.express as px
+import plotly.io as pio
+pio.renderers.default='notebook'
+
 #-------------------------------------------------------------------#
 # Functions
 
@@ -86,3 +91,27 @@ def data_enriching(csv_file):
     joined_gdf['gravity_for_tourist'] = joined_gdf['crime_description'].apply(assign_gravity)
 
     return joined_gdf
+
+
+### Basics stats
+def top_crimes(df):
+    # Initialisation
+    df_base = df.query(" month_occurred < 12"
+         ).pivot_table(
+            index=['name','crime_description']
+            ,aggfunc='sum'
+            , values='counter'
+            ).reset_index()
+    top_crimes = df_base.groupby('name').apply(lambda x: x.nlargest(5, 'counter')).reset_index(drop=True)
+    return top_crimes
+
+### Graphiques
+def crime_evol(df):
+    fig = px.line(df.query(" month_occurred < 12").pivot_table(index=['year_occurred','month_occurred','name'] ,aggfunc='sum' , values='counter'  ).reset_index()
+                , x="month_occurred"
+                , y="counter"
+                ,color ='name'
+                ,title='Crimes number evolution -in 2023'
+                ,markers=True
+                )
+    return fig.show('notebook')
