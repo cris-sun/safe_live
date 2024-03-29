@@ -86,3 +86,83 @@ def data_enriching(csv_file):
     joined_gdf['gravity_for_tourist'] = joined_gdf['crime_description'].apply(assign_gravity)
 
     return joined_gdf
+
+
+# adding the geoshape data
+def data_enriching2(csv_file):
+    current_dir = os.getcwd()
+    current_dir
+
+    file_path = os.path.join(current_dir , 'raw_data', csv_file)
+    df = pd.read_csv(file_path)
+
+    columns_keep = [
+'division_number',
+'date_reported',
+'date_occurred',
+'area',
+'area_name',
+'reporting_district',
+'part',
+'crime_code',
+'crime_description',
+'modus_operandi',
+'victim_age',
+'victim_sex',
+'victim_descent',
+'premise_code',
+'premise_description',
+'weapon_code',
+'weapon_description',
+'status',
+'status_description',
+'crime_code_1',
+'crime_code_2',
+'crime_code_3',
+'crime_code_4',
+'location',
+'cross_street',
+'latitude',
+'longitude',
+]
+
+    df = df[columns_keep]
+    df['counter']=1
+
+    # Dates
+    df['date_occurred'] = pd.to_datetime(df['date_occurred'], errors='coerce')
+    df['year_occurred'] = df['date_occurred'].dt.year
+    df['month_occurred'] = df['date_occurred'].dt.month
+    df['day_occurred'] = df['date_occurred'].dt.day
+    df['hour_occurred'] = df['date_occurred'].dt.hour
+
+    # Load the shapefile
+
+    #   fetch all the data from the raw_data folder
+
+    file_path = os.path.join(current_dir , 'data','geo_data','cfbcc20d-2c5d-4c30-9dfa-627d46ec1a742020328-1-9ulknm.pzqsm.shp')
+
+    neighborhoods = gpd.read_file(file_path)
+
+    crime_data_gdf = gpd.GeoDataFrame(df, geometry=gpd.points_from_xy(df.longitude, df.latitude))
+    crime_data_gdf.set_crs(neighborhoods.crs, inplace=True).head(1)
+
+    joined_gdf = gpd.sjoin(crime_data_gdf, neighborhoods, how='left', op='within')
+
+    joined_gdf['gravity_for_tourist'] = joined_gdf['crime_description'].apply(assign_gravity)
+
+    return joined_gdf
+
+
+def df_top_5(df, filter_name):
+    # Convert filter_name to lowercase outside the lambda for efficiency
+    filter_name_lower = filter_name.lower()
+
+    # First, filter the DataFrame based on the case-insensitive 'name'
+    # Then, for each group in 'name', find the top 5 'crime_description' by 'counter' sum
+    return (df[df['area_name'].str.lower() == filter_name_lower]
+            .groupby(['area_name', 'crime_description'])['counter']
+            .sum()
+            .reset_index()
+            .groupby('area_name', as_index=False, group_keys=False)
+            .apply(lambda x: x.nlargest(5, 'counter')))
